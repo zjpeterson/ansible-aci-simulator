@@ -1,0 +1,4 @@
+---
+- name: Load tasks for defined nodes
+  include_tasks: discovery.yml
+  loop: "{{ range(nodes|length) | list }}"

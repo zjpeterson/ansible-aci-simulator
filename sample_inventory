@@ -1,0 +1,7 @@
+[sandbox]
+sandboxapicdc.cisco.com
+
+[sandbox:vars]
+ansible_user: admin
+ansible_password: ciscopsdt
+validate_certs: no

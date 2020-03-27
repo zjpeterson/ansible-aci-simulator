@@ -1,0 +1,12 @@
+---
+validate_certs: yes
+nodes:
+  - serial: TEP-1-101
+    id: 101
+    name: leaf-101
+  - serial: TEP-1-102
+    id: 102
+    name: leaf-102
+  - serial: TEP-1-103
+    id: 201
+    name: spine-201

@@ -1,0 +1,16 @@
+aaa-wait
+========
+:Author: Zach Peterson
+:Email: zpeterson@redhat.com
+
+Overview
+--------
+This role waits for the AAA service to become available on a newly started APIC.
+
+It's intended to be used in plays executed immediately after booting the target APIC, in order to start running tasks ASAP. The specific use case this was written for is constant re-provisioning of an ACI Simulator in a lab scenario.
+
+It will actually wait for resolution of any condition that doesn't result in a successful login, not just availability of the AAA service. Therefore, if anything about the credentials or host information is incorrect, this role will fail after its retry limit.
+
+License
+-------
+BSD

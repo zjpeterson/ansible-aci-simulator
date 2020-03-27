@@ -1,0 +1,48 @@
+ansible-aci
+===========
+:Author: Zach Peterson
+:Email: zpeterson@redhat.com
+
+Overview
+--------
+This is a set of Ansible roles and playbooks for use with Cisco ACI. The current versions of all the files have been tested against APIC 4.2(3l).
+
+Roles
+-----
+Please see each role's README for more information.
+
+.List of all roles
+[options="header"]
+|=======================
+| Role           | Description
+| aaa-wait       | Waits for the AAA service to become available on a newly started APIC
+| register-nodes | Registers a list of pre-defined fabric nodes according to a pre-defined dictionary
+|=======================
+
+Playbooks
+---------
+.List of all playbooks
+[options="header"]
+|==================
+| Playbook             | Description | Roles used
+| fabric-discovery.yml | Discovers and registers nodes in a fabric with no pre-existing configuration. Developed for use with ACI Simulator. | aaa-wait, register-nodes
+|==================
+
+General Guidelines
+------------------
+
+Inventory
+~~~~~~~~~
+A sample inventory `sample_inventory` is provided in this repository. It runs against the public always-on ACI Sandbox provided by Cisco. Note that this is not useful for testing fabric discovery, as that step is already completed in that environment.
+
+HTTPS Certificate Validation
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+All roles in this project contain a default variable `validate_certs: yes`. You should override this in your inventory when working in a lab envronment that does not have a HTTPS ceritifcate installed that can be validated from your Ansible control node.
+
+Inventory Hosts
+~~~~~~~~~~~~~~~
+All roles in this project populate the `host` parameter, common across ACI modules, using `inventory_hostname`. Therefore, you need to build your inventory such that it provides a single APIC target, or you will see redundant execution.
+
+Credentials
+~~~~~~~~~~~
+All roles in this project assume that valid login information is contained in `ansible_user` and `ansible_password`. This works with a stored Machine-type credential in Ansible Tower. Some environments may need to replace these parameter values with lookups.

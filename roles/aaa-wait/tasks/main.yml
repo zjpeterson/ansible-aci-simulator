@@ -1,0 +1,16 @@
+---
+- name: Wait for AAA service to become available
+  uri:
+    method: POST
+    url: https://{{ inventory_hostname }}/api/aaaLogin.json
+    validate_certs: "{{ validate_certs }}"
+    body_format: json
+    body: 
+      aaaUser:
+        attributes:
+          name: "{{ ansible_user }}"
+          pwd: "{{ ansible_password }}"
+  register: aaa_info
+  until: aaa_info.status == 200
+  retries: 10
+  delay: 30

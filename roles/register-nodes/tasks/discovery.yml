@@ -1,0 +1,49 @@
+---
+- name: Find an unregistered node
+  aci_rest:
+    host: "{{ inventory_hostname }}"
+    username: "{{ ansible_user }}"
+    password: "{{ ansible_password }}"
+    validate_certs: "{{ validate_certs }}"
+    method: get
+    path: /api/node/class/dhcpClient.json?query-target-filter=eq(dhcpClient.ip,"0.0.0.0")
+  register: node_info
+
+- name: Register and confirm discovered node
+  vars:
+    discovered_id: "{{ node_info.imdata.0.dhcpClient.attributes.id }}"
+  block:
+    - name: Register discovered node {{ discovered_id }}
+      aci_rest:
+        host: "{{ inventory_hostname }}"
+        username: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        validate_certs: "{{ validate_certs }}"
+        method: post
+        path: /api/node/mo/uni/controller/nodeidentpol.json
+        content: >
+          {
+            "fabricNodeIdentP": {
+              "attributes": {
+                "dn": "uni/controller/nodeidentpol/nodep-{{ discovered_id }}",
+                "serial":"{{ discovered_id }}",
+                "nodeId":"{{ nodes | selectattr('serial', 'equalto', discovered_id) | map(attribute='id') | first }}",
+                "name":"{{ nodes | selectattr('serial', 'equalto', discovered_id) | map(attribute='name') | first }}",
+                "status":"created,modified"
+              },
+              "children": []
+            }
+          }
+    - name: Wait for registeration to complete
+      aci_rest:
+        host: "{{ inventory_hostname }}"
+        username: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        validate_certs: "{{ validate_certs }}"
+        method: get
+        path: /api/node/class/fabricNode.json?query-target-filter=eq(fabricNode.serial, "{{ discovered_id }}")
+      register: reg_info
+      until: "reg_info.imdata.0.fabricNode.attributes.address != '0.0.0.0'"
+      retries: 5
+      delay: 30
+  when: node_info.totalCount > 0

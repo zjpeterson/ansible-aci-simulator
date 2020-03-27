@@ -1,0 +1,5 @@
+galaxy_info:
+  role_name: zjpeterson.ansible-aci.register-nodes
+  author: Zach Peterson
+  description: Walks a new ACI fabric node-by-node and registers what it finds
+  license: BSD

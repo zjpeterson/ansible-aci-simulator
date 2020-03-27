@@ -1,0 +1,13 @@
+---
+- name: Perform initial fabric discovery
+  hosts: all
+  connection: local
+  gather_facts: no
+
+  tasks:
+  - name: Wait for AAA service to become available
+    include_role:
+      name: aaa-wait
+  - name: Register the specified nodes
+    include_role:
+      name: register-nodes
