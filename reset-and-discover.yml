@@ -1,13 +1,23 @@
 ---
+- name: Reset and configure simulator VM
+  hosts: vsphere
+  connection: local
+  gather_facts: no
+
+  tasks:
+    - name: Run VM setup
+      include_role:
+        name: vm-setup
+
 - name: Perform initial fabric discovery
   hosts: apic
   connection: local
   gather_facts: no
 
   tasks:
-  - name: Wait for AAA service to become available
-    include_role:
-      name: aaa-wait
-  - name: Register the specified nodes
-    include_role:
-      name: register-nodes
+    - name: Wait for AAA service to become available
+      include_role:
+        name: aaa-wait
+    - name: Register the specified nodes
+      include_role:
+        name: register-nodes
