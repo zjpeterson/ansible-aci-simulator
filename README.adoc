@@ -5,7 +5,7 @@ ansible-aci
 
 Overview
 --------
-This is a set of Ansible roles and playbooks for use with Cisco ACI. The current versions of all the files have been tested against APIC 4.2(3l).
+This is a set of Ansible roles and playbooks for use with Cisco ACI Simulator. They have been tested against version 4.2(3l).
 
 Roles
 -----
@@ -15,6 +15,7 @@ Please see each role's README for more information.
 [options="header"]
 |=======================
 | Role           | Description
+| vm-setup       | Resets and configures an ACI Simulator VM
 | aaa-wait       | Waits for the AAA service to become available on a newly started APIC
 | register-nodes | Registers a list of pre-defined fabric nodes according to a pre-defined dictionary
 |=======================
@@ -25,7 +26,7 @@ Playbooks
 [options="header"]
 |==================
 | Playbook             | Description | Roles used
-| fabric-discovery.yml | Discovers and registers nodes in a fabric with no pre-existing configuration. Developed for use with ACI Simulator. | aaa-wait, register-nodes
+| reset-and-discover.yml | Resets and configures an existing ACI Simulator VM. Then, on the reset fabric, discovers and registers spine/leaf nodes. | vm-setup, aaa-wait, register-nodes
 |==================
 
 General Guidelines
@@ -33,16 +34,8 @@ General Guidelines
 
 Inventory
 ~~~~~~~~~
-A sample inventory `sample_inventory` is provided in this repository. It runs against the public always-on ACI Sandbox provided by Cisco. Note that this is not useful for testing fabric discovery, as that step is already completed in that environment.
+A sample inventory `sample_inventory` is provided in this repository. The roles assume this structure, so avoid changing it significantly.
 
 HTTPS Certificate Validation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 All roles in this project contain a default variable `validate_certs: yes`. You should override this in your inventory when working in a lab envronment that does not have a HTTPS ceritifcate installed that can be validated from your Ansible control node.
-
-Inventory Hosts
-~~~~~~~~~~~~~~~
-All roles in this project populate the `host` parameter, common across ACI modules, using `inventory_hostname`. Therefore, you need to build your inventory such that it provides a single APIC target, or you will see redundant execution.
-
-Credentials
-~~~~~~~~~~~
-All roles in this project assume that valid login information is contained in `ansible_user` and `ansible_password`. This works with a stored Machine-type credential in Ansible Tower. Some environments may need to replace these parameter values with lookups.

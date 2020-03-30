@@ -1,0 +1,7 @@
+---
+validate_certs: yes
+vm_dc: my-lab
+vm_name: acisim
+wait_time: 90
+net_cidr: 10.10.10.10/24
+net_gw: 10.10.10.1

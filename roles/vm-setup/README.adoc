@@ -1,0 +1,41 @@
+vm-setup
+========
+:Author: Zach Peterson
+:Email: zpeterson@redhat.com
+
+Overview
+-------
+This role resets and configures an ACI Simulator VM.
+
+It is assumed that this VM is already deployed from OVA, and has an appropriate network connection assigned.
+
+.Requirements for Port Group:
+* Accessible to the Ansible control node
+* Promiscuous Mode allowed
+* MAC address changes allowed
+
+Requirements
+------------
+Due to the use of VMWare modules, your Ansible control node must have `pyVmomi` installed. This is available via `pip`.
+
+Due to the use of the `vmware_guest_sendkey` module, your target vSphere environment must be running version 6.5 or higher, and your Ansible version must be 2.9 or higher.
+
+Role Variables
+--------------
+You are required to populate the following variables:
+
+`vm_dc`: The vSphere datacenter where your VM is deployed
+
+`vm_name`: The name of your deployed VM. This is presumed unique.
+
+`wait_time`: A value in seconds to wait for the VM to reach its initial configuration prompt
+
+`net_cidr`: The desired IPv4 address for the APIC in CIDR format. IPv6 is not supported by this role at this time.
+
+`net_gw`: The IPv4 gateway address to use with `net_cidr`
+
+Examples have been included in the role defaults.
+
+License
+-------
+BSD

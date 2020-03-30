@@ -1,0 +1,70 @@
+---
+- name: Get VM info
+  vmware_guest_info:
+    hostname: "{{ inventory_hostname }}"
+    username: "{{ ansible_user }}"
+    password: "{{ ansible_password }}"
+    datacenter: "{{ vm_dc }}"
+    name: "{{ vm_name }}"
+    validate_certs: "{{ validate_certs }}"
+  register: vm_info
+- name: Change VM power state
+  vmware_guest_powerstate:
+    hostname: "{{ inventory_hostname }}"
+    username: "{{ ansible_user }}"
+    password: "{{ ansible_password }}"
+    validate_certs: "{{ validate_certs }}"
+    moid: "{{ vm_info.instance.moid }}"
+    state: "{{ 'restarted' if vm_info.instance.hw_power_status == 'poweredOn' else 'powered-on' }}"
+- name: Wait for boot
+  pause:
+    seconds: "{{ wait_time }}"
+- name: Configure appliance via console
+  vmware_guest_sendkey:
+    hostname: "{{ inventory_hostname }}"
+    username: "{{ ansible_user }}"
+    password: "{{ ansible_password }}"
+    validate_certs: "{{ validate_certs }}"
+    moid: "{{ vm_info.instance.moid }}"
+    keys_send: "{{ item.keys_send }}"
+    string_send: "{{ item.string_send | default(omit) }}"
+  no_log: "{{ item.no_log }}"
+  loop:
+    - keys_send:
+        - ENTER
+        - ENTER
+        - ENTER
+        - ENTER
+        - ENTER
+        - ENTER
+        - ENTER
+        - ENTER
+        - ENTER
+        - ENTER
+        - ENTER
+      string_send: "{{ net_cidr }}"
+      no_log: no
+    - keys_send:
+        - ENTER
+      string_send: "{{ net_gw }}"
+      no_log: no
+    - keys_send:
+        - ENTER
+        - ENTER
+      string_send: "N"
+      no_log: no
+    - keys_send:
+        - ENTER
+      string_send: "{{ hostvars[groups['apic'][0]]['ansible_password'] }}"
+      no_log: yes
+    - keys_send:
+        - ENTER
+      string_send: "{{ hostvars[groups['apic'][0]]['ansible_password'] }}"
+      no_log: yes
+    - keys_send:
+        - ENTER
+      string_send: "n"
+      no_log: no
+    - keys_send:
+        - ENTER
+      no_log: no
