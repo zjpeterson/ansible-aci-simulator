@@ -1,5 +1,6 @@
 galaxy_info:
-  role_name: zjpeterson.ansible-aci.register-nodes
+  role_name: zjpeterson.ansible-aci-simulator.register-nodes
   author: Zach Peterson
   description: Walks a new ACI fabric node-by-node and registers what it finds
   license: BSD
+  min_ansible_version: 2.4
