@@ -26,6 +26,7 @@ Playbooks
 [options="header"]
 |==================
 | Playbook             | Description | Roles used
+| reset-and-validate.yml | Resets and configures an existing ACI Simulator VM. Then, validates successful APIC login. | vm-setup, aaa-wait
 | reset-and-discover.yml | Resets and configures an existing ACI Simulator VM. Then, on the reset fabric, discovers and registers spine/leaf nodes. | vm-setup, aaa-wait, register-nodes
 |==================
 
