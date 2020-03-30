@@ -1,7 +1,15 @@
-[sandbox]
-sandboxapicdc.cisco.com
+[apic]
+acisim.example.com
 
-[sandbox:vars]
-ansible_user: admin
-ansible_password: ciscopsdt
-validate_certs: no
+[apic:vars]
+ansible_user=admin
+ansible_password=password
+validate_certs=yes
+
+[vsphere]
+vsphere.example.com
+
+[vsphere:vars]
+ansible_user=user@vsphere.local
+ansible_password=password
+validate_certs=yes
