@@ -1,13 +1,21 @@
 ---
-- name: Find an unregistered node
-  aci_rest:
-    host: "{{ inventory_hostname }}"
-    username: "{{ ansible_user }}"
-    password: "{{ ansible_password }}"
-    validate_certs: "{{ validate_certs }}"
-    method: get
-    path: /api/node/class/dhcpClient.json?query-target-filter=eq(dhcpClient.ip,"0.0.0.0")
-  register: node_info
+- name: Discover an unregistered node if one is available
+  block:
+    - name: Find an unregistered node
+      aci_rest:
+        host: "{{ inventory_hostname }}"
+        username: "{{ ansible_user }}"
+        password: "{{ ansible_password }}"
+        validate_certs: "{{ validate_certs }}"
+        method: get
+        path: /api/node/class/dhcpClient.json?query-target-filter=eq(dhcpClient.ip,"0.0.0.0")
+      register: node_info
+      until: node_info.totalCount > 0
+      retries: 3
+      delay: 10
+  rescue:
+    - debug:
+        msg: "No unregistered node was found"
 
 - name: Register and confirm discovered node
   vars:
