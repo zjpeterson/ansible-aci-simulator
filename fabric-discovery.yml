@@ -1,6 +1,6 @@
 ---
 - name: Perform initial fabric discovery
-  hosts: all
+  hosts: apic
   connection: local
   gather_facts: no
 
